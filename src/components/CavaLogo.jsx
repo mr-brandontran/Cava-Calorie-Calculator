@@ -42,7 +42,7 @@ export default function CavaLogo({ className = "h-7" }) {
           Nutrition Calculator
         </span>
         <span className="text-[9px] font-sans font-bold uppercase tracking-wider text-gray-500 leading-none mt-0.5">
-          Unofficial Fan Tool
+          Unofficial Tool
         </span>
       </div>
     </div>

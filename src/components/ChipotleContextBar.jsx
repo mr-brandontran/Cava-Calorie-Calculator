@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Minus, SlidersHorizontal, RotateCcw, FileText } from 'lucide-react';
+import { Plus, Minus, SlidersHorizontal, RotateCcw } from 'lucide-react';
 
 export default function ChipotleContextBar({
   title = "BUILD YOUR BOWL",
@@ -113,16 +113,8 @@ export default function ChipotleContextBar({
               </div>
             </div>
 
-            {/* View Nutrition Button & Micronutrient Accordion Toggle */}
-            <div className="flex items-center space-x-2.5">
-              <button
-                onClick={onOpenNutrition}
-                className="bg-[#451400] hover:bg-[#330E00] text-white px-5 sm:px-6 py-3 rounded-[3px] font-condensed font-bold text-sm sm:text-base tracking-wider uppercase transition-all active:scale-98 shadow-xs flex items-center space-x-1.5"
-              >
-                <FileText size={16} />
-                <span>View Nutrition</span>
-              </button>
-
+            {/* Micronutrient Accordion Toggle */}
+            <div className="flex items-center">
               <button
                 onClick={() => setShowMicros(!showMicros)}
                 className="w-9 h-9 rounded-full border border-[#451400] text-[#451400] hover:bg-[#451400] hover:text-white flex items-center justify-center transition-colors"
