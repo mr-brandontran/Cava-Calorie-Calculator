@@ -67,20 +67,40 @@ export const INGREDIENT_IMAGES = {
   'dark-chocolate-oat-cookie': `${CDN_BASE}/oNrVGGzhzv3detmauR4C6/8b189610907e6f8794b34c26ce85505d/chocolate-chip-oat-cookie_20231120_web.jpg?w=180&h=180&fit=fill&q=85`,
   'apricot-honey-cookie': `${CDN_BASE}/RubTuCHfKupjHkwOVSbns/999d51a0c79ece843b0b3dc4346b7461/apricot-cookie_20231120_web.jpg?w=180&h=180&fit=fill&q=85`,
 
-  // Drinks
-  'classic-lemonade-16oz': 'https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=180&auto=format&fit=crop&q=80',
-  'cucumber-mint-lime-16oz': 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=180&auto=format&fit=crop&q=80',
-  'blueberry-lavender-16oz': 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=180&auto=format&fit=crop&q=80',
-  'sweet-tea-16oz': 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=180&auto=format&fit=crop&q=80',
-  'unsweetened-black-tea-16oz': 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=180&auto=format&fit=crop&q=80',
-  'jasmine-green-tea-16oz': 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=180&auto=format&fit=crop&q=80',
-  'spindrift-grapefruit': 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=180&auto=format&fit=crop&q=80',
-  'spindrift-raspberry-lime': 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=180&auto=format&fit=crop&q=80',
-  'maine-root-soda-16oz': 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=180&auto=format&fit=crop&q=80',
-  'maine-root-diet-soda-16oz': 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=180&auto=format&fit=crop&q=80',
-  'chocolate-milk': 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=180&auto=format&fit=crop&q=80',
-  'milk-1-percent': 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=180&auto=format&fit=crop&q=80',
-  'honest-apple-juice': 'https://images.unsplash.com/photo-1613478223719-2ab802602423?w=180&auto=format&fit=crop&q=80',
+  // -------------------------------------------------------------------------
+  // BEVERAGES & DRINKS (Official CAVA CDN Direct URLs)
+  // -------------------------------------------------------------------------
+  'classic-lemonade-16oz': `${CDN_BASE}/7MZjt8s3qBPuLnXZeaW3LH/56125c1f42fc880fd51dc54d60d53acc/classic-lemonade_20231120_web.webp?w=180&h=180&fit=fill&q=85`,
+  'cucumber-mint-lime-16oz': `${CDN_BASE}/2rfWJCKQVnIGL93MllCJ6r/ad6aa4c3fc01e291a8dfd710ea493ce0/cucumber-mint-lime_20231120_web.webp?w=180&h=180&fit=fill&q=85`,
+  'blueberry-lavender-16oz': `${CDN_BASE}/4Z3cvZjuOf67Nqc74pwKXD/975c82179b57de3b9c7134ee82ea41e2/blueberry-lavender_20231120_web.webp?w=180&h=180&fit=fill&q=85`,
+  'sweet-tea-16oz': `${CDN_BASE}/3wQuGW7tD0FD4CRCHqFyhz/66fd5a522aa9352f8a25f5821b8e29bf/sweet-tea_20231120_web__1_.webp?w=180&h=180&fit=fill&q=85`,
+  'unsweetened-black-tea-16oz': `${CDN_BASE}/3wQuGW7tD0FD4CRCHqFyhz/66fd5a522aa9352f8a25f5821b8e29bf/sweet-tea_20231120_web__1_.webp?w=180&h=180&fit=fill&q=85`,
+  'jasmine-green-tea-16oz': `${CDN_BASE}/3PfOqwxzAUP1ej9ScJFfHL/1d98b20cc1b129ff8610abdbfbd1c86c/jasmine-tea_20231120_web.webp?w=180&h=180&fit=fill&q=85`,
+  'pomegranate-apple-16oz': `${CDN_BASE}/3BeHwmDaCtkfRg8GBOlVZN/118110d36f09f3f855af95ba6009aa98/new_pom_apple.webp?w=180&h=180&fit=fill&q=85`,
+  'spindrift-lemon': `${CDN_BASE}/6wWc9lDICY95DzEZArbdXP/6fed637a869550e7cad17b2d498ee17d/spindrift-lemon_20231120_web.webp?w=180&h=180&fit=fill&q=85`,
+  'spindrift-half-tea-half-lemon': `${CDN_BASE}/6sDHnwbD4iBeGVYvT5pL1p/3063b33995a5bd22997ec5356c21b9cb/spindrift-half-tea-half-lemon_20231120_web.webp?w=180&h=180&fit=fill&q=85`,
+  'spindrift-grapefruit': `${CDN_BASE}/6wWc9lDICY95DzEZArbdXP/6fed637a869550e7cad17b2d498ee17d/spindrift-lemon_20231120_web.webp?w=180&h=180&fit=fill&q=85`,
+  'spindrift-raspberry-lime': `${CDN_BASE}/6sDHnwbD4iBeGVYvT5pL1p/3063b33995a5bd22997ec5356c21b9cb/spindrift-half-tea-half-lemon_20231120_web.webp?w=180&h=180&fit=fill&q=85`,
+  'maine-root-soda-16oz': `${CDN_BASE}/3SJrZxgYmPxL2nGbAIKohn/9733b9b890e324ceea270cc404205cb0/mexicane-cola_20231120_web.webp?w=180&h=180&fit=fill&q=85`,
+  'maine-root-diet-soda-16oz': `${CDN_BASE}/3SJrZxgYmPxL2nGbAIKohn/9733b9b890e324ceea270cc404205cb0/mexicane-cola_20231120_web.webp?w=180&h=180&fit=fill&q=85`,
+  'chocolate-milk': `${CDN_BASE}/5EcPVWmRuHjs5NPiQdvFxn/2d08c4d3e888904370272e736962a8c5/chocolate-milk_20231120_web.webp?w=180&h=180&fit=fill&q=85`,
+  'milk-1-percent': `${CDN_BASE}/49sGG4KQbWZv8owYsiAUk/eb2a0525c53d07ec1cb8a9f6d3b50145/milk_20231120_web.webp?w=180&h=180&fit=fill&q=85`,
+  'honest-apple-juice': `${CDN_BASE}/6a9oPtfPdw8xUwqJyOO0uT/7f39f34911ad945d24b1784f0b23972e/apple-juice_20231120_web.jpg?w=180&h=180&fit=fill&q=85`,
+
+  // -------------------------------------------------------------------------
+  // KID'S MEAL COMPONENTS (Official CAVA CDN Direct URLs)
+  // -------------------------------------------------------------------------
+  'kids-saffron-rice': `${CDN_BASE}/5sKUtwwEBxEOp8Jap0LyfF/d51254849a2e4263caf21f78eb14b757/saffron-basmati-rice_20240118.png?w=180&h=180&fit=fill&q=85`,
+  'kids-brown-rice': `${CDN_BASE}/5F9QEOeC39simR09JXV2qD/ec8da3a373ca78a383b4846c0113bc54/brown-rice_20240118.png?w=180&h=180&fit=fill&q=85`,
+  'kids-black-lentils': `${CDN_BASE}/4x3tkLSSyZ6FGiNckZJLqc/836437db0751426c37c04f573f1ca308/black-lentils_20240118.png?w=180&h=180&fit=fill&q=85`,
+  'kids-chicken': `${CDN_BASE}/6s6rdBPhCCft8cbYuGBCEm/6558726c2dfd0557de04c148a2513c82/grilled-chicken_20250929.PNG?w=180&h=180&fit=fill&q=85`,
+  'kids-harissa-chicken': `${CDN_BASE}/4rl0TWlFFxhwLEEPBUohLj/6ce68aa1417804978e70f8d3f730f85f/harissa-honey-chicken_20250929.PNG?w=180&h=180&fit=fill&q=85`,
+  'kids-steak': `${CDN_BASE}/3C4uTrNGI6qd7G78dbG7Ag/1b5cd202712546d2394cf0a3b1e4caef/grilled-steak_20250929.PNG?w=180&h=180&fit=fill&q=85`,
+  'kids-braised-lamb': `${CDN_BASE}/LornsiKXNQ7wDT866vijE/cb75cfdf6338ee1ba6f93898b5b087a0/braised-lamb_20250929.PNG?w=180&h=180&fit=fill&q=85`,
+  'kids-meatballs': `${CDN_BASE}/64PvsvVTKNcy9KShOLpNSZ/0e6aa267c567ca2aa3c7f73d8beed89d/kidsspicylambmeatballs.webp?w=180&h=180&fit=fill&q=85`,
+  'kids-falafel': `${CDN_BASE}/6NCG9ZYK2n97IQTuVlSe3j/fcc1722ed61c2667405515bdf25e2591/kidsfalafel.webp?w=180&h=180&fit=fill&q=85`,
+  'kids-veggies': `${CDN_BASE}/3zmAYNpDILqgI6tqRudxKn/7cafe05f75143508ef8b146584af26e7/roasted-vegetables_20250929.PNG?w=180&h=180&fit=fill&q=85`,
+  'kids-pita-chips': `${CDN_BASE}/7atHZ3gock5jNlewOUMtdB/dedb3bb7d9d36cf6aba84b0254b60265/pita-chips_20231120_web__2_.webp?w=180&h=180&fit=fill&q=85`,
 };
 
 export const getIngredientImage = (id) => {

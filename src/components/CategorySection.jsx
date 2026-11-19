@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ItemRow from './ItemRow';
 
 export default function CategorySection({
@@ -10,32 +10,43 @@ export default function CategorySection({
   activeFilters,
   isActiveSection = false
 }) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
   return (
     <section id={category.id} className="scroll-mt-28 mb-8 transition-all">
       {/* Category Section Header matching Chipotle's exact screenshot */}
       <div
-        className={`pt-5 pb-2 transition-all duration-200 ${
+        className={`pt-5 pb-2 transition-all duration-200 select-none ${
           isActiveSection
             ? 'bg-[#F9F7F4]/80 pl-2 pr-1 rounded-t border-l-4 border-[#451400]'
             : 'bg-white pl-0 pr-0'
         }`}
       >
-        {/* Tracked Subhead (e.g. CHOOSE ANY TWO) and Minus Dash */}
+        {/* Tracked Subhead and Interactive Collapse Toggle Button */}
         <div className="flex items-center justify-between">
           <div className="text-[11px] font-sans font-bold tracking-[0.16em] text-[#451400] uppercase">
             {category.subhead}
           </div>
-          {/* Subtle minus dash on the far right */}
-          <div className="text-[#451400] font-bold text-lg select-none pr-1">
-            —
-          </div>
+          {/* Working Interactive Collapse / Expand Button */}
+          <button
+            type="button"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="text-[#451400] font-bold text-xl px-2.5 py-0.5 hover:bg-[#F2EFEA] rounded cursor-pointer transition-colors leading-none"
+            aria-label={isCollapsed ? `Expand ${category.name}` : `Collapse ${category.name}`}
+            title={isCollapsed ? "Expand section" : "Collapse section"}
+          >
+            {isCollapsed ? '+' : '—'}
+          </button>
         </div>
 
         {/* Title and Macro Column Headers */}
         <div className="flex items-end justify-between mt-0.5">
-          {/* Category Title (e.g. PROTEIN OR VEGGIE) */}
-          <div className="flex items-center space-x-2">
-            <h2 className="font-condensed font-black text-2xl sm:text-3xl tracking-tight text-[#451400] uppercase">
+          {/* Category Title (clickable to toggle collapse) */}
+          <div
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="flex items-center space-x-2 cursor-pointer group"
+          >
+            <h2 className="font-condensed font-black text-2xl sm:text-3xl tracking-tight text-[#451400] uppercase group-hover:text-[#330E00] transition-colors">
               {category.name.split('(')[0].trim()}
             </h2>
 
@@ -63,55 +74,57 @@ export default function CategorySection({
       {/* Thin line separating header from rows */}
       <div className="border-b border-[#E5E0DB]"></div>
 
-      {/* Items List - Always visible, never collapses */}
-      <div className="bg-white">
-        {category.items.map((item) => {
-          const isSelected = !!selectedItems[item.id];
-          const selectedState = selectedItems[item.id];
+      {/* Items List - Collapses and expands smoothly */}
+      {!isCollapsed && (
+        <div className="bg-white">
+          {category.items.map((item) => {
+            const isSelected = !!selectedItems[item.id];
+            const selectedState = selectedItems[item.id];
 
-          // Check dietary filters
-          let isFilteredOut = false;
-          let filterWarning = '';
+            // Check dietary filters
+            let isFilteredOut = false;
+            let filterWarning = '';
 
-          if (activeFilters.vegan && !item.diets?.includes('vegan')) {
-            isFilteredOut = true;
-            filterWarning = 'Not Vegan';
-          } else if (activeFilters.vegetarian && !item.diets?.includes('vegetarian') && !item.diets?.includes('vegan')) {
-            isFilteredOut = true;
-            filterWarning = 'Not Vegetarian';
-          } else if (activeFilters.glutenFree && item.allergens?.includes('Wheat')) {
-            isFilteredOut = true;
-            filterWarning = 'Contains Wheat (Gluten)';
-          } else if (activeFilters.dairyFree && item.allergens?.includes('Milk')) {
-            isFilteredOut = true;
-            filterWarning = 'Contains Dairy (Milk)';
-          } else if (activeFilters.soyFree && item.allergens?.includes('Soy')) {
-            isFilteredOut = true;
-            filterWarning = 'Contains Soy';
-          } else if (activeFilters.eggFree && item.allergens?.includes('Eggs')) {
-            isFilteredOut = true;
-            filterWarning = 'Contains Eggs';
-          } else if (activeFilters.sesameFree && item.allergens?.includes('Sesame')) {
-            isFilteredOut = true;
-            filterWarning = 'Contains Sesame';
-          }
+            if (activeFilters.vegan && !item.diets?.includes('vegan')) {
+              isFilteredOut = true;
+              filterWarning = 'Not Vegan';
+            } else if (activeFilters.vegetarian && !item.diets?.includes('vegetarian') && !item.diets?.includes('vegan')) {
+              isFilteredOut = true;
+              filterWarning = 'Not Vegetarian';
+            } else if (activeFilters.glutenFree && item.allergens?.includes('Wheat')) {
+              isFilteredOut = true;
+              filterWarning = 'Contains Wheat (Gluten)';
+            } else if (activeFilters.dairyFree && item.allergens?.includes('Milk')) {
+              isFilteredOut = true;
+              filterWarning = 'Contains Dairy (Milk)';
+            } else if (activeFilters.soyFree && item.allergens?.includes('Soy')) {
+              isFilteredOut = true;
+              filterWarning = 'Contains Soy';
+            } else if (activeFilters.eggFree && item.allergens?.includes('Eggs')) {
+              isFilteredOut = true;
+              filterWarning = 'Contains Eggs';
+            } else if (activeFilters.sesameFree && item.allergens?.includes('Sesame')) {
+              isFilteredOut = true;
+              filterWarning = 'Contains Sesame';
+            }
 
-          return (
-            <ItemRow
-              key={item.id}
-              item={item}
-              category={category}
-              isSelected={isSelected}
-              selectedState={selectedState}
-              onToggle={onToggleItem}
-              onUpdatePortion={onUpdatePortion}
-              onUpdateQuantity={onUpdateQuantity}
-              isFilteredOut={isFilteredOut}
-              filterWarning={filterWarning}
-            />
-          );
-        })}
-      </div>
+            return (
+              <ItemRow
+                key={item.id}
+                item={item}
+                category={category}
+                isSelected={isSelected}
+                selectedState={selectedState}
+                onToggle={onToggleItem}
+                onUpdatePortion={onUpdatePortion}
+                onUpdateQuantity={onUpdateQuantity}
+                isFilteredOut={isFilteredOut}
+                filterWarning={filterWarning}
+              />
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 }
