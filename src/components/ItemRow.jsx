@@ -1,5 +1,5 @@
 import React from 'react';
-import CavaIcon from './CavaIcon';
+import { getIngredientImage } from '../data/cavaImages';
 import { Minus, Plus, AlertCircle } from 'lucide-react';
 
 export default function ItemRow({
@@ -13,6 +13,8 @@ export default function ItemRow({
   isFilteredOut,
   filterWarning
 }) {
+  const imageUrl = getIngredientImage(item.id);
+
   // Compute multipliers
   let multiplier = 1;
   let portionLabel = 'Normal';
@@ -52,7 +54,7 @@ export default function ItemRow({
         onClick={() => !isFilteredOut && onToggle(item, category)}
         className="px-4 py-3 flex items-center justify-between cursor-pointer select-none group min-h-[66px]"
       >
-        {/* Left Side: Circular Radio + Illustrated Icon + Title */}
+        {/* Left Side: Circular Radio + Authentic Photographic Cutout + Title */}
         <div className="flex items-center min-w-0 pr-2">
           {/* Circular Radio Indicator */}
           <div
@@ -67,9 +69,18 @@ export default function ItemRow({
             )}
           </div>
 
-          {/* Cute, Realistic CAVA Illustration Badge */}
-          <div className="w-11 h-11 mx-3 flex-shrink-0 rounded-full border border-chipotle-border/50 bg-[#FCFBF9] p-1 flex items-center justify-center shadow-2xs group-hover:scale-105 transition-transform duration-150">
-            <CavaIcon id={item.id} className="w-full h-full" />
+          {/* Authentic Real Food Photographic Cutout (Exact Chipotle/CAVA Style) */}
+          <div className="w-11 h-11 mx-3 flex-shrink-0 rounded-full overflow-hidden bg-white border border-chipotle-border/40 shadow-2xs flex items-center justify-center p-0.5">
+            <img
+              src={imageUrl}
+              alt={item.name}
+              className="w-full h-full object-contain rounded-full transform group-hover:scale-108 transition-transform duration-200"
+              loading="lazy"
+              onError={(e) => {
+                // Graceful fallback to avoid broken images if offline
+                e.target.style.opacity = '0.7';
+              }}
+            />
           </div>
 
           {/* Item Title in Bold Condensed Grotesque Sans */}
