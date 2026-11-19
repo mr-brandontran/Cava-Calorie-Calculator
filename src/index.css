@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    overscroll-behavior-y: none;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+}
+
+/* Tabular figures for numbers to avoid jittering when tally updates */
+.num-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hide scrollbar for clean horizontal pill scrolling on iPhone */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Safe area utilities for iPhone notch / home indicator */
+.safe-bottom {
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+}
+.safe-top {
+  padding-top: max(12px, env(safe-area-inset-top));
+}
