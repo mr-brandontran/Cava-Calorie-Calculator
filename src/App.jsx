@@ -36,7 +36,7 @@ export default function App() {
   // Track active section for category nav
   const [activeSection, setActiveSection] = useState('bases');
 
-  // Scroll spy effect to highlight category nav on scroll
+  // Scroll spy effect to highlight category nav and active section on scroll
   useEffect(() => {
     if (activeTab !== 'custom') return;
 
@@ -74,10 +74,9 @@ export default function App() {
       if (category.id === 'bases') {
         const currentBases = Object.values(next).filter((i) => i.categoryId === 'bases');
         if (currentBases.length >= 2) {
-          // If already 2 bases, replace the oldest one
           delete next[currentBases[0].item.id];
         }
-        // If now we have 2 bases, set both to half portion (split)
+        // If selecting a 2nd base, default both to half portion (split)
         const updatedBases = Object.values(next).filter((i) => i.categoryId === 'bases');
         if (updatedBases.length === 1) {
           next[updatedBases[0].item.id].portion = 'half';
@@ -170,7 +169,7 @@ export default function App() {
     setIsNutritionModalOpen(true);
   };
 
-  // Calculate live nutrition totals
+  // Calculate live nutrition totals with full, half, regular, extra, double, light, side
   const totals = useMemo(() => {
     if (activeTab === 'curated-bowls' || activeTab === 'curated-pitas') {
       if (selectedCurated) {
@@ -209,7 +208,7 @@ export default function App() {
       let multiplier = 1;
       if (categoryId === 'sides' || categoryId === 'drinks' || categoryId === 'kids') {
         multiplier = quantity;
-      } else if (portion === 'double') {
+      } else if (portion === 'double' || portion === 'extra') {
         multiplier = 2;
       } else if (portion === 'light' || portion === 'half') {
         multiplier = 0.5;
@@ -261,17 +260,17 @@ export default function App() {
     return Object.values(selectedItems).map(({ item, portion, quantity }) => {
       let multiplier = 1;
       let portionLabel = '';
-      if (portion === 'double') {
+      if (portion === 'double' || portion === 'extra') {
         multiplier = 2;
-        portionLabel = 'Double';
+        portionLabel = portion === 'double' ? 'Double' : 'Extra';
       } else if (portion === 'light') {
         multiplier = 0.5;
         portionLabel = 'Light';
       } else if (portion === 'half') {
         multiplier = 0.5;
-        portionLabel = 'Half Base';
+        portionLabel = 'Half Portion';
       } else if (portion === 'side') {
-        portionLabel = 'Side';
+        portionLabel = 'On Side';
       }
 
       return {
@@ -298,7 +297,7 @@ export default function App() {
         selectedCount={selectedCount}
       />
 
-      {/* 2. Chipotle-Style Context Sub-Header (Title, Links, 320cal, Fat/Protein/Carbs, Add to Bag) */}
+      {/* 2. Chipotle-Style Context Sub-Header */}
       <ChipotleContextBar
         title={activeTab === 'custom' ? "GRAIN BOWL" : activeTab === 'curated-bowls' ? "CURATED BOWLS" : "CURATED PITAS"}
         totals={totals}
@@ -333,6 +332,7 @@ export default function App() {
                   onUpdatePortion={handleUpdatePortion}
                   onUpdateQuantity={handleUpdateQuantity}
                   activeFilters={filters}
+                  isActiveSection={activeSection === cat.id}
                 />
               ))}
             </div>

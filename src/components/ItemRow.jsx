@@ -1,6 +1,6 @@
 import React from 'react';
 import { getIngredientImage } from '../data/cavaImages';
-import { Minus, Plus, AlertCircle } from 'lucide-react';
+import { Minus, Plus, AlertCircle, Check } from 'lucide-react';
 
 export default function ItemRow({
   item,
@@ -17,20 +17,23 @@ export default function ItemRow({
 
   // Compute multipliers
   let multiplier = 1;
-  let portionLabel = 'Normal';
+  let portionLabel = 'Regular';
+  const portion = selectedState?.portion || 'regular';
 
   if (isSelected && selectedState) {
     if (category.type === 'counter') {
       multiplier = selectedState.quantity || 1;
-    } else if (selectedState.portion === 'double') {
+    } else if (portion === 'double' || portion === 'extra') {
       multiplier = 2;
-      portionLabel = 'Double';
-    } else if (selectedState.portion === 'light' || selectedState.portion === 'half') {
+      portionLabel = portion === 'double' ? 'Double' : 'Extra';
+    } else if (portion === 'light' || portion === 'half') {
       multiplier = 0.5;
-      portionLabel = selectedState.portion === 'half' ? 'Half' : 'Light';
-    } else if (selectedState.portion === 'side') {
+      portionLabel = portion === 'half' ? 'Half' : 'Light';
+    } else if (portion === 'side') {
       multiplier = 1;
-      portionLabel = 'Side';
+      portionLabel = 'On Side';
+    } else {
+      portionLabel = category.id === 'bases' ? 'Full' : 'Regular';
     }
   }
 
@@ -45,39 +48,40 @@ export default function ItemRow({
         isFilteredOut
           ? 'opacity-40 bg-gray-50'
           : isSelected
-          ? 'bg-chipotle-tint/30'
-          : 'bg-white hover:bg-chipotle-tint/15'
+          ? 'bg-chipotle-tint/25'
+          : 'bg-white hover:bg-chipotle-tint/10'
       }`}
     >
-      {/* Main Clickable Row matching Chipotle's design */}
+      {/* Main Clickable Row */}
       <div
         onClick={() => !isFilteredOut && onToggle(item, category)}
         className="px-4 py-3 flex items-center justify-between cursor-pointer select-none group min-h-[66px]"
       >
-        {/* Left Side: Circular Radio + Authentic Photographic Cutout + Title */}
+        {/* Left Side: Circular Radio Bullet + Authentic Cutout Photo + Title */}
         <div className="flex items-center min-w-0 pr-2">
-          {/* Circular Radio Indicator */}
+          {/* Prominent Circular Radio Bullet Point - Fills in distinctly when selected */}
           <div
-            className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all flex-shrink-0 ${
+            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-150 flex-shrink-0 ${
               isSelected
-                ? 'border-chipotle-dark bg-chipotle-dark'
-                : 'border-gray-400 bg-white group-hover:border-chipotle-dark'
+                ? 'border-chipotle-dark bg-white shadow-2xs'
+                : 'border-gray-300 bg-white group-hover:border-chipotle-dark'
             }`}
+            aria-checked={isSelected}
+            role="radio"
           >
             {isSelected && (
-              <div className="w-2 h-2 rounded-full bg-white"></div>
+              <div className="w-3.5 h-3.5 rounded-full bg-chipotle-dark transition-transform scale-100"></div>
             )}
           </div>
 
-          {/* Authentic Real Food Photographic Cutout (Exact Chipotle/CAVA Style) */}
-          <div className="w-11 h-11 mx-3 flex-shrink-0 rounded-full overflow-hidden bg-white border border-chipotle-border/40 shadow-2xs flex items-center justify-center p-0.5">
+          {/* Authentic Real Food Photographic Cutout */}
+          <div className="w-11 h-11 mx-3 flex-shrink-0 rounded-full overflow-hidden bg-white border border-chipotle-border/50 shadow-2xs flex items-center justify-center p-0.5">
             <img
               src={imageUrl}
               alt={item.name}
               className="w-full h-full object-contain rounded-full transform group-hover:scale-108 transition-transform duration-200"
               loading="lazy"
               onError={(e) => {
-                // Graceful fallback to avoid broken images if offline
                 e.target.style.opacity = '0.7';
               }}
             />
@@ -86,11 +90,14 @@ export default function ItemRow({
           {/* Item Title in Bold Condensed Grotesque Sans */}
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-condensed font-bold text-base sm:text-lg tracking-tight text-chipotle-text uppercase truncate">
+              <span className={`font-condensed font-bold text-base sm:text-lg tracking-tight uppercase truncate ${
+                isSelected ? 'text-chipotle-dark font-black' : 'text-chipotle-text'
+              }`}>
                 {item.name}
               </span>
 
-              {isSelected && multiplier !== 1 && (
+              {/* Active portion modifier indicator */}
+              {isSelected && (
                 <span className="text-[10px] font-condensed font-bold uppercase tracking-wider bg-chipotle-dark text-white px-1.5 py-0.5 rounded-[2px]">
                   {portionLabel} ({multiplier}x)
                 </span>
@@ -143,26 +150,28 @@ export default function ItemRow({
         </div>
       </div>
 
-      {/* Expandable Portion Selector when Active */}
+      {/* Intuitive Portion Selection Buttons (Half / Full / Light / Regular / Extra / Side) */}
       {isSelected && (
-        <div className="px-14 pb-3 pt-1 flex flex-wrap items-center justify-between gap-2 text-xs bg-chipotle-tint/20">
-          <span className="text-[11px] font-sans font-semibold text-chipotle-muted uppercase tracking-wider">
-            Portion:
+        <div className="px-4 sm:px-14 py-2.5 bg-chipotle-tint/40 border-t border-chipotle-border/50 flex flex-wrap items-center justify-between gap-2.5 text-xs">
+          <span className="text-[11px] font-sans font-bold text-chipotle-dark uppercase tracking-wider">
+            Choose Portion:
           </span>
 
+          {/* 1. Counter for Sides & Drinks */}
           {category.type === 'counter' ? (
-            <div className="flex items-center space-x-2 bg-white rounded border border-chipotle-border px-2 py-0.5">
+            <div className="flex items-center space-x-2 bg-white rounded-md border border-chipotle-border px-3 py-1 shadow-2xs">
+              <span className="text-xs font-semibold text-chipotle-muted uppercase">Qty:</span>
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   onUpdateQuantity(item.id, Math.max(1, (selectedState.quantity || 1) - 1));
                 }}
-                className="w-6 h-6 flex items-center justify-center text-chipotle-dark hover:bg-gray-100 rounded"
+                className="w-7 h-7 flex items-center justify-center text-chipotle-dark hover:bg-gray-100 rounded active:scale-95"
               >
-                <Minus size={12} />
+                <Minus size={13} strokeWidth={2.5} />
               </button>
-              <span className="font-bold text-chipotle-text w-4 text-center num-tabular">
+              <span className="font-condensed font-bold text-base text-chipotle-text w-5 text-center num-tabular">
                 {selectedState.quantity || 1}
               </span>
               <button
@@ -171,130 +180,162 @@ export default function ItemRow({
                   e.stopPropagation();
                   onUpdateQuantity(item.id, (selectedState.quantity || 1) + 1);
                 }}
-                className="w-6 h-6 flex items-center justify-center text-chipotle-dark hover:bg-gray-100 rounded"
+                className="w-7 h-7 flex items-center justify-center text-chipotle-dark hover:bg-gray-100 rounded active:scale-95"
               >
-                <Plus size={12} />
+                <Plus size={13} strokeWidth={2.5} />
               </button>
             </div>
-          ) : category.id === 'mains' ? (
-            <div className="inline-flex bg-white rounded-[3px] border border-chipotle-border overflow-hidden">
+          ) : category.id === 'bases' ? (
+            /* 2. Bases: Intuitive Half Portion vs Full Portion Buttons */
+            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   onUpdatePortion(item.id, 'half');
                 }}
-                className={`px-3 py-1 font-condensed font-bold text-xs uppercase transition-colors ${
-                  selectedState.portion === 'half'
-                    ? 'bg-chipotle-dark text-white'
-                    : 'text-chipotle-text hover:bg-gray-50'
+                className={`px-3.5 py-1.5 rounded-[4px] font-condensed font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5 transition-all shadow-2xs ${
+                  portion === 'half'
+                    ? 'bg-chipotle-dark text-white ring-1 ring-chipotle-dark'
+                    : 'bg-white text-chipotle-text border border-chipotle-border hover:bg-gray-50'
                 }`}
               >
-                Half (0.5x)
+                {portion === 'half' && <Check size={13} strokeWidth={3} />}
+                <span>Half Portion (50%)</span>
               </button>
+
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   onUpdatePortion(item.id, 'regular');
                 }}
-                className={`px-3 py-1 font-condensed font-bold text-xs uppercase border-l border-r border-chipotle-border transition-colors ${
-                  !selectedState.portion || selectedState.portion === 'regular'
-                    ? 'bg-chipotle-dark text-white'
-                    : 'text-chipotle-text hover:bg-gray-50'
+                className={`px-3.5 py-1.5 rounded-[4px] font-condensed font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5 transition-all shadow-2xs ${
+                  portion === 'regular'
+                    ? 'bg-chipotle-dark text-white ring-1 ring-chipotle-dark'
+                    : 'bg-white text-chipotle-text border border-chipotle-border hover:bg-gray-50'
                 }`}
               >
-                Normal (1x)
+                {portion === 'regular' && <Check size={13} strokeWidth={3} />}
+                <span>Full Portion (100%)</span>
               </button>
+            </div>
+          ) : category.id === 'mains' ? (
+            /* 3. Mains & Proteins: Half vs Regular vs Extra/Double Buttons */
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onUpdatePortion(item.id, 'half');
+                }}
+                className={`px-3 py-1.5 rounded-[4px] font-condensed font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5 transition-all shadow-2xs ${
+                  portion === 'half'
+                    ? 'bg-chipotle-dark text-white ring-1 ring-chipotle-dark'
+                    : 'bg-white text-chipotle-text border border-chipotle-border hover:bg-gray-50'
+                }`}
+              >
+                {portion === 'half' && <Check size={12} strokeWidth={3} />}
+                <span>Half Portion</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onUpdatePortion(item.id, 'regular');
+                }}
+                className={`px-3.5 py-1.5 rounded-[4px] font-condensed font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5 transition-all shadow-2xs ${
+                  portion === 'regular'
+                    ? 'bg-chipotle-dark text-white ring-1 ring-chipotle-dark'
+                    : 'bg-white text-chipotle-text border border-chipotle-border hover:bg-gray-50'
+                }`}
+              >
+                {portion === 'regular' && <Check size={12} strokeWidth={3} />}
+                <span>Regular (1x)</span>
+              </button>
+
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   onUpdatePortion(item.id, 'double');
                 }}
-                className={`px-3 py-1 font-condensed font-bold text-xs uppercase transition-colors ${
-                  selectedState.portion === 'double'
-                    ? 'bg-chipotle-dark text-white'
-                    : 'text-chipotle-text hover:bg-gray-50'
+                className={`px-3.5 py-1.5 rounded-[4px] font-condensed font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1.5 transition-all shadow-2xs ${
+                  portion === 'double'
+                    ? 'bg-chipotle-dark text-white ring-1 ring-chipotle-dark'
+                    : 'bg-white text-chipotle-text border border-chipotle-border hover:bg-gray-50'
                 }`}
               >
-                Double (2x)
-              </button>
-            </div>
-          ) : category.id === 'bases' ? (
-            <div className="inline-flex bg-white rounded-[3px] border border-chipotle-border overflow-hidden">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onUpdatePortion(item.id, 'half');
-                }}
-                className={`px-3 py-1 font-condensed font-bold text-xs uppercase transition-colors ${
-                  selectedState.portion === 'half'
-                    ? 'bg-chipotle-dark text-white'
-                    : 'text-chipotle-text hover:bg-gray-50'
-                }`}
-              >
-                Half Base (50%)
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onUpdatePortion(item.id, 'regular');
-                }}
-                className={`px-3 py-1 font-condensed font-bold text-xs uppercase border-l border-chipotle-border transition-colors ${
-                  !selectedState.portion || selectedState.portion === 'regular'
-                    ? 'bg-chipotle-dark text-white'
-                    : 'text-chipotle-text hover:bg-gray-50'
-                }`}
-              >
-                Full Base (100%)
+                {portion === 'double' && <Check size={12} strokeWidth={3} />}
+                <span>Extra / Double (2x)</span>
               </button>
             </div>
           ) : (
-            <div className="inline-flex bg-white rounded-[3px] border border-chipotle-border overflow-hidden">
+            /* 4. Toppings & Dressings: Light vs Regular vs Extra vs On Side Buttons */
+            <div className="flex items-center gap-1.5 flex-wrap">
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   onUpdatePortion(item.id, 'light');
                 }}
-                className={`px-2.5 py-1 font-condensed font-bold text-xs uppercase transition-colors ${
-                  selectedState.portion === 'light'
-                    ? 'bg-chipotle-dark text-white'
-                    : 'text-chipotle-text hover:bg-gray-50'
+                className={`px-2.5 sm:px-3 py-1.5 rounded-[4px] font-condensed font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1 transition-all shadow-2xs ${
+                  portion === 'light'
+                    ? 'bg-chipotle-dark text-white ring-1 ring-chipotle-dark'
+                    : 'bg-white text-chipotle-text border border-chipotle-border hover:bg-gray-50'
                 }`}
               >
-                Light
+                {portion === 'light' && <Check size={12} strokeWidth={3} />}
+                <span>Light (½)</span>
               </button>
+
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   onUpdatePortion(item.id, 'regular');
                 }}
-                className={`px-2.5 py-1 font-condensed font-bold text-xs uppercase border-l border-r border-chipotle-border transition-colors ${
-                  !selectedState.portion || selectedState.portion === 'regular'
-                    ? 'bg-chipotle-dark text-white'
-                    : 'text-chipotle-text hover:bg-gray-50'
+                className={`px-3 py-1.5 rounded-[4px] font-condensed font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1 transition-all shadow-2xs ${
+                  portion === 'regular'
+                    ? 'bg-chipotle-dark text-white ring-1 ring-chipotle-dark'
+                    : 'bg-white text-chipotle-text border border-chipotle-border hover:bg-gray-50'
                 }`}
               >
-                Normal
+                {portion === 'regular' && <Check size={12} strokeWidth={3} />}
+                <span>Regular (1x)</span>
               </button>
+
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onUpdatePortion(item.id, 'extra');
+                }}
+                className={`px-2.5 sm:px-3 py-1.5 rounded-[4px] font-condensed font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1 transition-all shadow-2xs ${
+                  portion === 'extra'
+                    ? 'bg-chipotle-dark text-white ring-1 ring-chipotle-dark'
+                    : 'bg-white text-chipotle-text border border-chipotle-border hover:bg-gray-50'
+                }`}
+              >
+                {portion === 'extra' && <Check size={12} strokeWidth={3} />}
+                <span>Extra (2x)</span>
+              </button>
+
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   onUpdatePortion(item.id, 'side');
                 }}
-                className={`px-2.5 py-1 font-condensed font-bold text-xs uppercase transition-colors ${
-                  selectedState.portion === 'side'
-                    ? 'bg-chipotle-dark text-white'
-                    : 'text-chipotle-text hover:bg-gray-50'
+                className={`px-2.5 sm:px-3 py-1.5 rounded-[4px] font-condensed font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-1 transition-all shadow-2xs ${
+                  portion === 'side'
+                    ? 'bg-chipotle-dark text-white ring-1 ring-chipotle-dark'
+                    : 'bg-white text-chipotle-text border border-chipotle-border hover:bg-gray-50'
                 }`}
               >
-                Side
+                {portion === 'side' && <Check size={12} strokeWidth={3} />}
+                <span>On Side</span>
               </button>
             </div>
           )}
