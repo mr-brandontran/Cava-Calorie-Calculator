@@ -4,19 +4,13 @@ import ChipotleContextBar from './components/ChipotleContextBar';
 import CategoryNav from './components/CategoryNav';
 import CategorySection from './components/CategorySection';
 import StickyBottomBar from './components/StickyBottomBar';
+import Footer from './components/Footer';
 import DietaryModal from './components/DietaryModal';
 import NutritionFactsModal from './components/NutritionFactsModal';
-import CuratedView from './components/CuratedView';
-import {
-  MENU_CATEGORIES,
-  CURATED_BOWLS,
-  CURATED_PITAS
-} from './data/cavaMenuData';
+import { MENU_CATEGORIES } from './data/cavaMenuData';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('custom'); // 'custom' | 'curated-bowls' | 'curated-pitas'
   const [selectedItems, setSelectedItems] = useState({});
-  const [selectedCurated, setSelectedCurated] = useState(null);
   
   // Modals
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
@@ -38,8 +32,6 @@ export default function App() {
 
   // Scroll spy effect to highlight category nav and active section on scroll
   useEffect(() => {
-    if (activeTab !== 'custom') return;
-
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 180;
       for (const category of MENU_CATEGORIES) {
@@ -57,7 +49,7 @@ export default function App() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [activeTab]);
+  }, []);
 
   // Toggle item selection
   const handleToggleItem = (item, category) => {
@@ -132,7 +124,6 @@ export default function App() {
 
   const handleReset = () => {
     setSelectedItems({});
-    setSelectedCurated(null);
   };
 
   const handleToggleFilter = (filterKey) => {
@@ -164,32 +155,8 @@ export default function App() {
     }
   };
 
-  const handleSelectCurated = (curatedItem) => {
-    setSelectedCurated(curatedItem);
-    setIsNutritionModalOpen(true);
-  };
-
   // Calculate live nutrition totals with full, half, regular, extra, double, light, side
   const totals = useMemo(() => {
-    if (activeTab === 'curated-bowls' || activeTab === 'curated-pitas') {
-      if (selectedCurated) {
-        return { ...selectedCurated.nutrition };
-      }
-      return {
-        cal: 0,
-        calFromFat: 0,
-        totalFat: 0,
-        satFat: 0,
-        transFat: 0,
-        chol: 0,
-        sodium: 0,
-        carb: 0,
-        fiber: 0,
-        sugar: 0,
-        protein: 0
-      };
-    }
-
     const initial = {
       cal: 0,
       calFromFat: 0,
@@ -242,21 +209,9 @@ export default function App() {
       sugar: Math.round(initial.sugar * 10) / 10,
       protein: Math.round(initial.protein * 10) / 10
     };
-  }, [selectedItems, activeTab, selectedCurated]);
+  }, [selectedItems]);
 
   const selectedItemsList = useMemo(() => {
-    if (activeTab === 'curated-bowls' || activeTab === 'curated-pitas') {
-      if (selectedCurated) {
-        return [{
-          name: selectedCurated.name,
-          portionLabel: '1 Meal',
-          quantity: 1,
-          itemCal: selectedCurated.nutrition.cal
-        }];
-      }
-      return [];
-    }
-
     return Object.values(selectedItems).map(({ item, portion, quantity }) => {
       let multiplier = 1;
       let portionLabel = '';
@@ -280,7 +235,7 @@ export default function App() {
         itemCal: Math.round(item.cal * multiplier * (quantity || 1))
       };
     });
-  }, [selectedItems, activeTab, selectedCurated]);
+  }, [selectedItems]);
 
   const activeFilterCount = Object.values(filters).filter(Boolean).length;
   const selectedCount = Object.keys(selectedItems).length;
@@ -289,84 +244,68 @@ export default function App() {
     <div className="min-h-screen bg-white pb-28 text-chipotle-text flex flex-col font-sans">
       {/* 1. Global Navigation Bar */}
       <Header
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
         filterCount={activeFilterCount}
         onOpenFilters={() => setIsFilterModalOpen(true)}
         onOpenNutrition={() => setIsNutritionModalOpen(true)}
         selectedCount={selectedCount}
+        onReset={handleReset}
       />
 
       {/* 2. Chipotle-Style Context Sub-Header */}
       <ChipotleContextBar
-        title={activeTab === 'custom' ? "GRAIN BOWL" : activeTab === 'curated-bowls' ? "CURATED BOWLS" : "CURATED PITAS"}
+        title="BUILD YOUR BOWL"
         totals={totals}
         onOpenNutrition={() => setIsNutritionModalOpen(true)}
         onOpenFilters={() => setIsFilterModalOpen(true)}
         filterCount={activeFilterCount}
         onReset={handleReset}
         selectedCount={selectedCount}
-        onBack={() => setActiveTab('custom')}
       />
 
-      {/* 3. Main Builder or Curated View */}
+      {/* 3. Main Builder View */}
       <main className="flex-1">
-        {activeTab === 'custom' && (
-          <div className="max-w-6xl mx-auto px-4">
-            {/* Category Navigation Pills */}
-            <CategoryNav
-              categories={MENU_CATEGORIES}
-              selectedItems={selectedItems}
-              activeSection={activeSection}
-              onSelectCategory={handleSelectCategory}
-            />
+        <div className="max-w-6xl mx-auto px-4">
+          {/* Category Navigation Pills */}
+          <CategoryNav
+            categories={MENU_CATEGORIES}
+            selectedItems={selectedItems}
+            activeSection={activeSection}
+            onSelectCategory={handleSelectCategory}
+          />
 
-            {/* Category Sections (Bases, Dips, Mains, Toppings, Dressings, Sides, Drinks, Kids) */}
-            <div className="space-y-6">
-              {MENU_CATEGORIES.map((cat) => (
-                <CategorySection
-                  key={cat.id}
-                  category={cat}
-                  selectedItems={selectedItems}
-                  onToggleItem={handleToggleItem}
-                  onUpdatePortion={handleUpdatePortion}
-                  onUpdateQuantity={handleUpdateQuantity}
-                  activeFilters={filters}
-                  isActiveSection={activeSection === cat.id}
-                />
-              ))}
-            </div>
+          {/* Category Sections (Bases, Dips, Mains, Toppings, Dressings, Sides, Drinks, Kids) */}
+          <div className="space-y-6">
+            {MENU_CATEGORIES.map((cat) => (
+              <CategorySection
+                key={cat.id}
+                category={cat}
+                selectedItems={selectedItems}
+                onToggleItem={handleToggleItem}
+                onUpdatePortion={handleUpdatePortion}
+                onUpdateQuantity={handleUpdateQuantity}
+                activeFilters={filters}
+                isActiveSection={activeSection === cat.id}
+              />
+            ))}
           </div>
-        )}
-
-        {activeTab === 'curated-bowls' && (
-          <CuratedView
-            items={CURATED_BOWLS}
-            type="curated-bowls"
-            onSelectCurated={handleSelectCurated}
-            selectedCuratedId={selectedCurated?.id}
-          />
-        )}
-
-        {activeTab === 'curated-pitas' && (
-          <CuratedView
-            items={CURATED_PITAS}
-            type="curated-pitas"
-            onSelectCurated={handleSelectCurated}
-            selectedCuratedId={selectedCurated?.id}
-          />
-        )}
+        </div>
       </main>
 
       {/* 4. Sticky Bottom Floating Dock */}
       <StickyBottomBar
         totals={totals}
-        selectedCount={activeTab === 'custom' ? selectedCount : (selectedCurated ? 1 : 0)}
+        selectedCount={selectedCount}
         onOpenNutrition={() => setIsNutritionModalOpen(true)}
         onReset={handleReset}
       />
 
-      {/* 5. Modals */}
+      {/* 5. Legal Disclaimer & Protection Footer */}
+      <Footer
+        onOpenNutrition={() => setIsNutritionModalOpen(true)}
+        onOpenFilters={() => setIsFilterModalOpen(true)}
+      />
+
+      {/* 6. Modals */}
       <DietaryModal
         isOpen={isFilterModalOpen}
         onClose={() => setIsFilterModalOpen(false)}

@@ -1,117 +1,64 @@
 import React from 'react';
-import { MapPin, User, ShoppingBag } from 'lucide-react';
+import CavaLogo from './CavaLogo';
+import { SlidersHorizontal, RotateCcw, FileText } from 'lucide-react';
 
 export default function Header({ 
-  activeTab, 
-  setActiveTab, 
-  filterCount, 
+  filterCount = 0, 
   onOpenFilters, 
   onOpenNutrition,
-  selectedCount 
+  selectedCount = 0,
+  onReset
 }) {
   return (
-    <header className="bg-white border-b border-chipotle-border sticky top-0 z-40">
-      {/* Top Corporate Navigation Bar (Chipotle style) */}
+    <header className="bg-white border-b border-[#E5E0DB] sticky top-0 z-40">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        {/* Left: Brand Medallion & Links */}
-        <div className="flex items-center space-x-6 lg:space-x-10">
-          {/* CAVA Circular Seal Logo */}
-          <div 
-            onClick={() => setActiveTab('custom')}
-            className="flex items-center space-x-2 cursor-pointer select-none"
+        {/* Left: Authentic CAVA Wordmark Logo & Subtitle */}
+        <div className="flex items-center">
+          <CavaLogo className="h-7" />
+        </div>
+
+        {/* Right: Functional Action Tools (Preferences, Full Nutrition, Reset) */}
+        <div className="flex items-center space-x-2 sm:space-x-3">
+          {/* Dietary Preferences Filter Trigger */}
+          <button
+            onClick={onOpenFilters}
+            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-[3px] text-xs font-condensed font-bold uppercase tracking-wider border transition-all active:scale-95 ${
+              filterCount > 0
+                ? 'bg-[#451400] text-white border-[#451400] shadow-2xs'
+                : 'bg-[#F7F5F2] text-[#2B110B] border-[#E5E0DB] hover:bg-gray-200'
+            }`}
           >
-            <div className="w-10 h-10 rounded-full bg-chipotle-dark border-2 border-chipotle-dark flex items-center justify-center text-white shadow-xs">
-              <span className="font-condensed font-black text-sm tracking-widest text-[#F9F7F4]">
-                CAVA
+            <SlidersHorizontal size={13} />
+            <span>Preferences</span>
+            {filterCount > 0 && (
+              <span className="ml-1 bg-[#8C1D24] text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+                {filterCount}
               </span>
-            </div>
-          </div>
-
-          {/* Nav Links */}
-          <nav className="hidden md:flex items-center space-x-7 text-xs font-condensed font-bold tracking-wider text-chipotle-text uppercase">
-            <button 
-              onClick={() => setActiveTab('custom')} 
-              className={`hover:text-chipotle-dark transition-colors pb-1 ${activeTab === 'custom' ? 'text-chipotle-dark font-black' : ''}`}
-            >
-              Menu
-            </button>
-            <button 
-              onClick={() => setActiveTab('curated-bowls')} 
-              className={`hover:text-chipotle-dark transition-colors pb-1 ${activeTab === 'curated-bowls' ? 'text-chipotle-dark font-black' : ''}`}
-            >
-              Curated Bowls
-            </button>
-            <button 
-              onClick={() => setActiveTab('curated-pitas')} 
-              className={`hover:text-chipotle-dark transition-colors pb-1 ${activeTab === 'curated-pitas' ? 'text-chipotle-dark font-black' : ''}`}
-            >
-              Curated Pitas
-            </button>
-            
-            {/* Active Nutrition Tab Indicator */}
-            <div className="relative pb-1 cursor-pointer">
-              <span className="text-chipotle-dark font-black">NUTRITION</span>
-              <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-chipotle-red mx-auto w-7 rounded-full"></div>
-            </div>
-          </nav>
-        </div>
-
-        {/* Right Utility Navigation */}
-        <div className="flex items-center space-x-4 sm:space-x-6 text-xs font-condensed font-bold uppercase tracking-wider text-chipotle-text">
-          <div className="hidden sm:flex items-center space-x-1.5 cursor-pointer hover:text-chipotle-dark">
-            <MapPin size={15} className="text-chipotle-red" />
-            <span>FIND A CAVA</span>
-          </div>
-
-          <div className="hidden md:flex items-center space-x-1.5 cursor-pointer hover:text-chipotle-dark">
-            <User size={15} />
-            <span>SIGN IN / JOIN</span>
-          </div>
-
-          {/* Bag Icon */}
-          <button 
-            onClick={onOpenNutrition}
-            className="flex items-center space-x-1.5 bg-chipotle-tint hover:bg-gray-200 px-3 py-1.5 rounded-full transition-all text-chipotle-dark"
-            title="View Order Summary"
-          >
-            <ShoppingBag size={16} />
-            <span className="font-bold text-xs">{selectedCount}</span>
+            )}
           </button>
-        </div>
-      </div>
 
-      {/* Mobile Tab Switcher */}
-      <div className="md:hidden flex border-t border-chipotle-border/60 bg-chipotle-grayBg px-2 py-1.5">
-        <button
-          onClick={() => setActiveTab('custom')}
-          className={`flex-1 py-1.5 text-xs font-condensed font-bold uppercase tracking-wider rounded transition-all ${
-            activeTab === 'custom'
-              ? 'bg-white text-chipotle-dark shadow-2xs'
-              : 'text-chipotle-muted'
-          }`}
-        >
-          Build Your Bowl
-        </button>
-        <button
-          onClick={() => setActiveTab('curated-bowls')}
-          className={`flex-1 py-1.5 text-xs font-condensed font-bold uppercase tracking-wider rounded transition-all ${
-            activeTab === 'curated-bowls'
-              ? 'bg-white text-chipotle-dark shadow-2xs'
-              : 'text-chipotle-muted'
-          }`}
-        >
-          Curated Bowls
-        </button>
-        <button
-          onClick={() => setActiveTab('curated-pitas')}
-          className={`flex-1 py-1.5 text-xs font-condensed font-bold uppercase tracking-wider rounded transition-all ${
-            activeTab === 'curated-pitas'
-              ? 'bg-white text-chipotle-dark shadow-2xs'
-              : 'text-chipotle-muted'
-          }`}
-        >
-          Curated Pitas
-        </button>
+          {/* Nutrition Facts Modal Button */}
+          <button
+            onClick={onOpenNutrition}
+            className="flex items-center space-x-1.5 bg-[#F7F5F2] hover:bg-gray-200 text-[#2B110B] border border-[#E5E0DB] px-3 py-1.5 rounded-[3px] text-xs font-condensed font-bold uppercase tracking-wider transition-all active:scale-95"
+            title="View Full Nutrition Facts"
+          >
+            <FileText size={13} />
+            <span className="hidden sm:inline">Nutrition Facts</span>
+          </button>
+
+          {/* Quick Reset Button */}
+          {selectedCount > 0 && (
+            <button
+              onClick={onReset}
+              className="text-[#6E6E6E] hover:text-[#8C1D24] p-1.5 rounded hover:bg-gray-100 transition-colors"
+              title="Clear all selections"
+              aria-label="Reset"
+            >
+              <RotateCcw size={15} />
+            </button>
+          )}
+        </div>
       </div>
     </header>
   );
