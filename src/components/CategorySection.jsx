@@ -12,56 +12,58 @@ export default function CategorySection({
 }) {
   return (
     <section id={category.id} className="scroll-mt-28 mb-8 transition-all">
-      {/* Category Section Header - Never collapses, lights up when in section */}
+      {/* Category Section Header matching Chipotle's exact screenshot */}
       <div
-        className={`pt-5 pb-3 border-b transition-all duration-200 ${
+        className={`pt-5 pb-2 transition-all duration-200 ${
           isActiveSection
-            ? 'border-chipotle-dark bg-chipotle-tint/60 pl-3.5 pr-2 rounded-t-md border-l-4 border-l-chipotle-dark shadow-2xs'
-            : 'border-chipotle-border bg-white pl-0 pr-0'
+            ? 'bg-[#F9F7F4]/80 pl-2 pr-1 rounded-t border-l-4 border-[#451400]'
+            : 'bg-white pl-0 pr-0'
         }`}
       >
-        {/* Tracked Subtitle with Active Indicator */}
-        <div className="flex items-center space-x-2">
-          <span className={`text-[11px] font-sans font-bold tracking-[0.16em] uppercase ${
-            isActiveSection ? 'text-chipotle-dark font-black' : 'text-chipotle-dark/80'
-          }`}>
+        {/* Tracked Subhead (e.g. CHOOSE ANY TWO) and Minus Dash */}
+        <div className="flex items-center justify-between">
+          <div className="text-[11px] font-sans font-bold tracking-[0.16em] text-[#451400] uppercase">
             {category.subhead}
-          </span>
-
-          {/* Active Section "Lights Up" Badge */}
-          {isActiveSection && (
-            <span className="bg-chipotle-dark text-white text-[9px] font-condensed font-black px-2 py-0.5 rounded uppercase tracking-wider animate-fade-in shadow-2xs">
-              Current Section
-            </span>
-          )}
+          </div>
+          {/* Subtle minus dash on the far right */}
+          <div className="text-[#451400] font-bold text-lg select-none pr-1">
+            —
+          </div>
         </div>
 
         {/* Title and Macro Column Headers */}
-        <div className="flex items-end justify-between mt-1">
-          {/* Category Title */}
+        <div className="flex items-end justify-between mt-0.5">
+          {/* Category Title (e.g. PROTEIN OR VEGGIE) */}
           <div className="flex items-center space-x-2">
-            <h2 className={`font-condensed font-black text-2xl sm:text-3xl tracking-tight uppercase transition-colors ${
-              isActiveSection ? 'text-chipotle-dark' : 'text-chipotle-text'
-            }`}>
+            <h2 className="font-condensed font-black text-2xl sm:text-3xl tracking-tight text-[#451400] uppercase">
               {category.name.split('(')[0].trim()}
             </h2>
+
+            {isActiveSection && (
+              <span className="bg-[#451400] text-white text-[9px] font-condensed font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">
+                Current
+              </span>
+            )}
           </div>
 
-          {/* Column Header Labels on the Right */}
+          {/* Column Header Labels on the Right, matching column widths */}
           <div className="flex items-center flex-shrink-0 text-center font-sans text-xs text-chipotle-muted font-semibold">
-            {/* Calories column spacer */}
-            <div className="w-16 sm:w-20"></div>
+            {/* Empty space matching Calories column width */}
+            <div className="w-16 sm:w-24"></div>
             {/* Fat column label */}
-            <div className="w-12 sm:w-16">Fat</div>
+            <div className="w-12 sm:w-20">Fat</div>
             {/* Protein column label */}
-            <div className="w-12 sm:w-16">Protein</div>
+            <div className="w-12 sm:w-20">Protein</div>
             {/* Carbs column label */}
-            <div className="w-12 sm:w-16">Carbs</div>
+            <div className="w-12 sm:w-20">Carbs</div>
           </div>
         </div>
       </div>
 
-      {/* Items List - Always visible, never collapses or disappears */}
+      {/* Thin line separating header from rows */}
+      <div className="border-b border-[#E5E0DB]"></div>
+
+      {/* Items List - Always visible, never collapses */}
       <div className="bg-white">
         {category.items.map((item) => {
           const isSelected = !!selectedItems[item.id];
